@@ -1,2 +1,3 @@
-# homtec-metals
-Homtec Metals  | E Commerce Website
+# PropShop+
+
+> ProShop+ | E Commerce Website
