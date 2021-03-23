@@ -27,6 +27,9 @@ app.use(
     credentials: true,
   })
 );
+
+app.get('/', (_req, res) => res.send('ProShop Server LoL'));
+
 app.use('/', express.static('public'));
 // app.use(express.urlencoded({ extended: true }));
 // app.use(express.json());

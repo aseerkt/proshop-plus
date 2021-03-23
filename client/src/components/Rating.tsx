@@ -8,7 +8,7 @@ const Rating: React.FC<{ rating: number }> = ({ rating }) => {
   return (
     <div style={{ color: '#e2d520' }}>
       {[1, 2, 3, 4, 5].map((s) => (
-        <span>
+        <span key={`${s}_${Math.random() * 100}`}>
           <i className={ratingStyle(s)}></i>
         </span>
       ))}

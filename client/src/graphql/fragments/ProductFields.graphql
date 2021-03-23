@@ -1,0 +1,14 @@
+fragment ProductFields on Product {
+  id
+  name
+  image
+  description
+  brand
+  category
+  price
+  countInStock
+  rating
+  numReviews
+  createdAt
+  updatedAt
+}

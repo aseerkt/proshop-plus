@@ -1,8 +1,7 @@
 [
   {
-    "_id": "1",
     "name": "Apple MacBook Pro",
-    "image": "/images/seedImages/macbooks.jpg",
+    "image": "/images/seedImages/macbook.jpg",
     "description":
       "Bluetooth technology lets you connect it with compatible devices wirelessly High-quality AAC audio offers immersive listening experience Built-in microphone allows you to take calls while worki",
     "brand": "Apple",
@@ -13,7 +12,6 @@
     "numReviews": 12
   },
   {
-    "_id": "2",
     "name": "iPhone 11 Pro 256GB Memory",
     "image": "/images/seedImages/iphone11.jpg",
     "description":
@@ -26,7 +24,6 @@
     "numReviews": 8
   },
   {
-    "_id": "3",
     "name": "Cannon EOS 80D DSLR Camera",
     "image": "/images/seedImages/camera.jpg",
     "description":
@@ -39,7 +36,6 @@
     "numReviews": 12
   },
   {
-    "_id": "4",
     "name": "Xbox Series S",
     "image": "/images/seedImages/xbox.jpg",
     "description":
@@ -52,7 +48,6 @@
     "numReviews": 12
   },
   {
-    "_id": "5",
     "name": "Logitech G-Series Gaming Mouse",
     "image": "/images/seedImages/mouse.jpg",
     "description":
@@ -65,7 +60,6 @@
     "numReviews": 10
   },
   {
-    "_id": "6",
     "name": "Logitech G 512 RGB Backlit Mechanical Gaming Keyboard",
     "image": "/images/seedImages/keyboard.jpg",
     "description":
@@ -78,9 +72,8 @@
     "numReviews": 10
   },
   {
-    "_id": "7",
     "name": "Amazon Echo Dot 3rd Generation",
-    "image":"'/images/seedImages/alexa.jpg",
+    "image":"/images/seedImages/alexa.jpg",
     "description":
       "Meet Echo Dot - Our most popular smart speaker with a fabric design. It is our most compact smart speaker that fits perfectly into small space",
     "brand": "Amazon",
@@ -91,9 +84,8 @@
     "numReviews": 12
   },
   {
-    "_id": "8",
     "name": "Redgear Cosmo 7.1 USB Gaming Headphones",
-    "image":"'/images/seedImages/headset.jpg",
+    "image":"/images/seedImages/headset.jpg",
     "description":
       "Truly immerse yourself in your games with hardware-driven virtual 7.1 surround sound for precisely located audio",
     "brand": "RedGear",

@@ -1,0 +1,5 @@
+query GetProducts {
+  getProducts {
+    ...ProductFields
+  }
+}

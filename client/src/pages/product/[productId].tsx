@@ -1,17 +1,25 @@
+import { withUrqlClient } from 'next-urql';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import Rating from '../../components/Rating';
-import products from '../../products.json';
+import { useGetProductQuery } from '../../generated/graphql';
 import styles from '../../styles/pages/ProductPage.module.scss';
+import { createUrqlClient } from '../../utils/createUrqlClient';
 
 const ProductPage = () => {
   const { query } = useRouter();
-  const { productId } = query;
+  const { productId }: any = query;
 
-  const product = products.find((p) => p._id === productId);
+  const [{ data, fetching }] = useGetProductQuery({
+    variables: { productId },
+    pause: typeof productId !== 'string',
+  });
 
-  if (!product) return null;
+  const product = data && data.getProduct;
+
+  if (fetching) return <h2>Oops</h2>;
+  if (!product) return <h2>No product</h2>;
   return (
     <>
       <NextLink href='/'>
@@ -19,7 +27,7 @@ const ProductPage = () => {
       </NextLink>
       <div className={styles.productPage__container}>
         <Image
-          src={`http://localhost:5000${product.image}`}
+          src={product.image}
           alt={product.name}
           height='100%'
           layout='responsive'
@@ -67,4 +75,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default withUrqlClient(createUrqlClient, { ssr: true })(ProductPage);
