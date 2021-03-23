@@ -1,0 +1,33 @@
+$image-height: 250px;
+
+.product {
+  border: 1px solid lightgray;
+  // box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  overflow: hidden;
+  border-radius: 3px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  &__image {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: $image-height;
+  }
+
+  &__title {
+    font-weight: 1.2rem;
+  }
+  &__price {
+    margin-bottom: 0;
+  }
+}

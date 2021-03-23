@@ -1,0 +1,37 @@
+.productPage {
+  &__container {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 2fr 3fr 2fr;
+    gap: 1.5rem;
+    height: 100%;
+  }
+
+  &__details {
+    h2 {
+      margin-top: 0;
+    }
+  }
+
+  &__cart {
+    &__grid {
+      display: grid;
+      row-gap: 1rem;
+      grid-template-columns: 1fr 1fr;
+    }
+    button {
+      margin-top: 1rem;
+      display: block;
+      width: 100%;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+  }
+
+  &__card {
+    border: 1px solid lightgray;
+    overflow: hidden;
+    border-radius: 3px;
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,36 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  height: 60px;
+  border-bottom: 1px solid lightgray;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  z-index: 2;
+  background-color: #fff;
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    transition: 300ms linear;
+    &:hover {
+      opacity: 60;
+    }
+  }
+
+  &__links {
+    margin-left: 1rem;
+    a {
+      display: block;
+      height: 100%;
+      width: 100%;
+      i {
+        margin-right: 0.3rem;
+      }
+    }
+  }
+
+  &__hamburger {
+    display: none;
+  }
+}
