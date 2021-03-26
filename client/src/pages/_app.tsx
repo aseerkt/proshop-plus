@@ -1,17 +1,9 @@
 import '../styles/globals.scss';
 import Navbar from '../components/Navbar';
+import { AppProps } from 'next/app';
 
-function MyApp({ Component, pageProps }) {
-  return (
-    <>
-      <Navbar />
-      <main style={{ marginTop: '20px' }}>
-        <div className='container'>
-          <Component {...pageProps} />
-        </div>
-      </main>
-    </>
-  );
+function MyApp({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />;
 }
 
 export default MyApp;

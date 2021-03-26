@@ -1,0 +1,7 @@
+fragment CartItemFields on CartItem {
+  id
+  qty
+  product {
+    ...ProductFields
+  }
+}

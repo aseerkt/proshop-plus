@@ -1,0 +1,9 @@
+mutation Register($registerInput: RegisterInput!) {
+  register(registerInput: $registerInput) {
+    ok
+    errors {
+      path
+      message
+    }
+  }
+}

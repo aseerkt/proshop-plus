@@ -1,0 +1,8 @@
+query GetMyCart {
+  getMyCart {
+    id
+    cartItems {
+      ...CartItemFields
+    }
+  }
+}

@@ -31,6 +31,14 @@ a {
   display: flex;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
 .justify-center {
   justify-content: center;
 }
@@ -49,12 +57,16 @@ ul {
 }
 
 .btn {
-  display: inline-block;
+  // display: inline-block;
   padding: 0.3rem 0.8rem;
   border: 2px solid var(--clr-primary);
   text-transform: uppercase;
   transition: 200ms linear;
   cursor: pointer;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
   &:hover {
     background-color: var(--clr-primary);
     color: #fff;
@@ -65,10 +77,37 @@ ul {
 .btn-filled {
   background-color: var(--clr-primary);
   color: #fff;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
   &:hover {
-    background-color: #fff;
-    color: var(--clr-primary);
+    background-color: rgb(73, 68, 68);
     border: 2px solid var(--clr-primary);
     transform: scale(0.95);
   }
+}
+
+.input {
+  border: 1px solid lightgrey;
+  background-color: lightgray;
+  padding: 10px;
+  outline: none;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  &:hover {
+    border: 1px solid gray;
+  }
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.card {
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  overflow: hidden;
 }

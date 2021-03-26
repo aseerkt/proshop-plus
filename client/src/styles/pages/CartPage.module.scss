@@ -1,0 +1,40 @@
+.cartPage {
+  display: grid;
+  grid-template-columns: 5fr 2fr;
+  gap: 1rem;
+
+  &__cartItem {
+    display: grid;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+    padding-right: 2rem;
+    grid-template-columns: 2fr 3fr 2fr 1fr 1fr;
+    align-items: center;
+    gap: 1rem;
+
+    h3 {
+      margin: 0;
+    }
+    button {
+      padding: 0.5rem 0.8rem;
+    }
+  }
+  &__stats {
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    height: fit-content;
+    h3 {
+      margin-top: 0;
+    }
+    button {
+      padding: 0.5rem 1rem;
+    }
+  }
+}
