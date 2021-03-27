@@ -10,26 +10,39 @@
   }
 
   &__input {
-    padding: 1rem;
     display: block;
-    margin-bottom: 0.5rem;
-    border: 1px solid lightgray;
+    width: 100%;
+    height: calc(1.5em + 1.5rem);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #55595c;
+    background-color: #f7f7f9;
+    background-clip: padding-box;
+    border: 0.5px solid #ced4da;
+    border-radius: 0;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    margin-bottom: 0.6rem;
     &:hover {
       border-color: gray;
     }
     &:focus {
-      background-color: lightcyan;
-      border-color: gray;
-      border-width: 2px;
-      outline: none;
+      color: #55595c;
+      background-color: #f7f7f9;
+      border-color: #5a5a5a;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(26, 26, 26, 0.25);
     }
   }
 
   &__helperText {
     margin-bottom: 0.5rem;
+    color: #575c5c;
   }
 
   &__errorText {
     margin-bottom: 0.5rem;
+    color: #e92c2c;
   }
 }

@@ -1,29 +1,34 @@
-import FormContainer from '../containers/FormContainer';
 import { Formik, Form } from 'formik';
+import { withUrqlClient } from 'next-urql';
+import NextLink from 'next/link';
+import FormContainer from '../containers/FormContainer';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
 import { useLoginMutation } from '../generated/graphql';
-import { withUrqlClient } from 'next-urql';
 import { createUrqlClient } from '../utils/createUrqlClient';
 
 const Login = () => {
-  const [{ fetching }, login] = useLoginMutation();
+  const [, login] = useLoginMutation();
   return (
     <FormContainer title='Login'>
       <Formik
         initialValues={{ email: '', password: '' }}
-        onSubmit={async (values) => {
+        onSubmit={async (values, action) => {
           try {
             const res = await login(values);
             console.log(res);
+            const { errors } = res.data?.login;
+            errors.forEach(({ path, message }) => {
+              action.setFieldError(path, message);
+            });
           } catch (err) {
             console.log(err);
           }
           console.log(values);
         }}
       >
-        {({}) => (
-          <Form>
+        {({ isSubmitting, values: { email, password } }) => (
+          <Form style={{ marginBottom: '1rem' }}>
             <InputField name='email' label='Email' placeholder='Email' />
             <InputField
               type='password'
@@ -31,12 +36,23 @@ const Login = () => {
               label='Password'
               placeholder='Password'
             />
-            <Button isLoading={fetching} type='submit' variant='filled'>
+            <Button
+              disabled={!email || !password}
+              type='submit'
+              isLoading={isSubmitting}
+              variant='filled'
+            >
               Log In
             </Button>
           </Form>
         )}
       </Formik>
+      <small>
+        New Customer?{' '}
+        <NextLink href='/register'>
+          <a style={{ color: '#4e478b' }}>Sign Up</a>
+        </NextLink>
+      </small>
     </FormContainer>
   );
 };

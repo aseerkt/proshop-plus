@@ -1,18 +1,34 @@
 import { Formik, Form } from 'formik';
+import { withUrqlClient } from 'next-urql';
+import NextLink from 'next/link';
 import Button from '../components/Button';
 import InputField from '../components/InputField';
 import FormContainer from '../containers/FormContainer';
+import { useRegisterMutation } from '../generated/graphql';
+import { createUrqlClient } from '../utils/createUrqlClient';
 
 const Register = () => {
+  const [, register] = useRegisterMutation();
+
   return (
     <FormContainer title='Register'>
       <Formik
         initialValues={{ name: '', email: '', password: '' }}
-        onSubmit={() => {}}
+        onSubmit={async (values, action) => {
+          try {
+            const res = await register({ registerInput: values });
+            const { errors } = res.data?.register;
+            errors.forEach(({ path, message }) => {
+              action.setFieldError(path, message);
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        }}
       >
-        {({ isSubmitting }) => (
-          <Form>
-            <InputField name='Name' placeholder='Full name' label='Name' />
+        {({ isSubmitting, values: { name, email, password } }) => (
+          <Form style={{ marginBottom: '1rem' }}>
+            <InputField name='name' placeholder='Full name' label='Name' />
             <InputField name='email' placeholder='Email' label='Email' />
             <InputField
               type='password'
@@ -20,14 +36,25 @@ const Register = () => {
               label='Password'
               placeholder='Enter your password'
             />
-            <Button type='submit' isLoading={isSubmitting} variant='filled'>
+            <Button
+              disabled={!name || !email || !password}
+              type='submit'
+              isLoading={isSubmitting}
+              variant='filled'
+            >
               Register
             </Button>
           </Form>
         )}
       </Formik>
+      <small>
+        Already a member?{' '}
+        <NextLink href='/login'>
+          <a style={{ color: '#4e478b' }}>Log In</a>
+        </NextLink>
+      </small>
     </FormContainer>
   );
 };
 
-export default Register;
+export default withUrqlClient(createUrqlClient, { ssr: false })(Register);

@@ -17,11 +17,12 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
+      {...props}
       disabled={isLoading || props.disabled}
       className={cn(
         {
-          btn: variant === 'outlined',
-          'btn btn-filled': variant === 'filled',
+          'btn btn-outlined': variant === 'outlined',
+          btn: variant === 'filled',
         },
         styles.button
       )}

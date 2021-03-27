@@ -14,6 +14,7 @@ import {
   MeDocument,
   MeQuery,
   LoginMutation,
+  LogoutMutation,
 } from '../generated/graphql';
 import { betterUpdateQuery } from './betterUpdateQuery';
 
@@ -121,6 +122,16 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                   return { me: user };
                 }
               );
+            },
+            logout: (_result, _args, cache, _info) => {
+              betterUpdateQuery<LogoutMutation, MeQuery>(
+                cache,
+                { query: MeDocument },
+                _result,
+                () => ({ me: null })
+              );
+              cache.invalidate('Query', 'getMyCart');
+              Router.replace('/');
             },
           },
         },

@@ -1,23 +1,14 @@
-import { Field, ID, Int, ObjectType } from 'type-graphql';
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Field, Int, ObjectType } from 'type-graphql';
+import { Column, Entity } from 'typeorm';
+import { BaseWithUser } from './defaults/BaseWithUser';
 
 @ObjectType()
 @Entity('products')
-export class Product extends BaseEntity {
+export class Product extends BaseWithUser {
   constructor(product: Partial<Product>) {
     super();
     Object.assign(this, product);
   }
-  @Field(() => ID)
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
 
   @Field()
   @Column()
@@ -53,12 +44,4 @@ export class Product extends BaseEntity {
 
   @Field(() => Int, { defaultValue: 0 })
   numReviews: number;
-
-  @Field(() => Date)
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @Field(() => Date)
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

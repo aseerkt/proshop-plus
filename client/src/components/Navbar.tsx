@@ -1,12 +1,16 @@
 import NextLink from 'next/link';
 import styles from '../styles/components/Navbar.module.scss';
-import { useGetMyCartQuery, useMeQuery } from '../generated/graphql';
+import {
+  useGetMyCartQuery,
+  useMeQuery,
+  useLogoutMutation,
+} from '../generated/graphql';
 import NavDropdown from './NavDropdown';
 
 const Navbar = () => {
   const [{ data: userData, fetching }] = useMeQuery();
   const [{ data }] = useGetMyCartQuery();
-
+  const [, logout] = useLogoutMutation();
   const user = userData?.me || null;
 
   const cartTag = data?.getMyCart?.cartItems.length || 0;
@@ -20,7 +24,7 @@ const Navbar = () => {
           <ul>
             <li className={styles.navbar__links}>
               <NextLink href='/cart'>
-                <a className='btn'>
+                <a className='btn btn-outlined'>
                   {cartTag !== 0 && (
                     <div className={styles.navbar__cartCount}> {cartTag}</div>
                   )}
@@ -40,7 +44,7 @@ const Navbar = () => {
                         </a>
                       </NextLink>
                     </li>
-                    <li>
+                    <li onClick={() => logout()}>
                       <a>
                         {' '}
                         <i className='fas fa-sign-out-alt'></i> Log out
@@ -50,7 +54,7 @@ const Navbar = () => {
                 </NavDropdown>
               ) : (
                 <NextLink href='/login'>
-                  <a className='btn'>
+                  <a className='btn btn-outlined'>
                     <i className='fas fa-user'></i> <span>Sign In</span>
                   </a>
                 </NextLink>

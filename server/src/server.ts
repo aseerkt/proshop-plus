@@ -7,13 +7,17 @@ import { createConnection } from 'typeorm';
 import { buildSchema } from 'type-graphql';
 import { graphqlHTTP } from 'express-graphql';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import { createProductLoader } from './utils/createProductLoader';
+import { createUserLoader } from './utils/createUserLoader';
 
 createConnection()
   .then((conn) =>
     console.log(`Connected to Database: ${conn.driver.database}`.yellow.bold)
   )
   .catch((err) => {
-    console.error(`Database Connection Failed: ${err.message}`.red);
+    console.error(`Database Connection Failed`.red);
+    console.error(err);
     process.exit(1);
   });
 
@@ -36,11 +40,17 @@ app.use('/', express.static('public'));
 
 app.use(
   '/graphql',
+  cookieParser(),
   graphqlHTTP(async (req, res) => ({
     schema: await buildSchema({
       resolvers: [__dirname + '/resolvers/**/*.js'],
     }),
-    context: { req, res },
+    context: {
+      req,
+      res,
+      pdtLoader: createProductLoader(),
+      userLoader: createUserLoader(),
+    },
     graphiql: true,
   }))
 );

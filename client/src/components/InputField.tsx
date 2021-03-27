@@ -23,10 +23,10 @@ const InputField: React.FC<InputFieldProps> = ({
       </label>
       <input className={styles.inputField__input} {...field} {...props} />
       {helperText && (
-        <p className={styles.inputField__helperText}>{helperText}</p>
+        <small className={styles.inputField__helperText}>{helperText}</small>
       )}
       {error && touched && (
-        <p className={styles.inputField__errorText}>{error}</p>
+        <small className={styles.inputField__errorText}>{error}</small>
       )}
     </div>
   );
