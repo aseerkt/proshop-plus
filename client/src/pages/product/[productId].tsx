@@ -32,15 +32,11 @@ const ProductPage = () => {
   const product = data && data.getProduct;
 
   const addToCartHandler = async () => {
-    if (userData && !userData.me) {
-      addToGuestCart(product as Product, qty);
-    } else {
-      try {
-        const res = await addToCart({ productId, qty });
-        console.log(res);
-      } catch (err) {
-        console.log(err);
-      }
+    try {
+      const res = await addToCart({ productId, qty });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
     }
   };
 

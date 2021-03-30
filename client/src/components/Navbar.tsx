@@ -13,7 +13,7 @@ const Navbar = () => {
   const [, logout] = useLogoutMutation();
   const user = userData?.me || null;
 
-  const cartTag = data?.getMyCart?.cartItems.length || 0;
+  const cartTag = data?.getMyCart.length || 0;
   return (
     <header className={styles.navbar}>
       <div className='container flex items-center justify-between'>

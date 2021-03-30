@@ -1,12 +1,11 @@
 import { Field, Int, ObjectType } from 'type-graphql';
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
-import { Cart } from './Cart';
-import { Base } from './defaults/Base';
+import { BaseWithUser } from './defaults/BaseWithUser';
 import { Product } from './Product';
 
 @ObjectType()
 @Entity('cart_items')
-export class CartItem extends Base {
+export class CartItem extends BaseWithUser {
   @Field(() => Int)
   @Column({ type: 'int' })
   qty: number;
@@ -17,10 +16,4 @@ export class CartItem extends Base {
 
   @ManyToOne(() => Product)
   product: Product;
-
-  @PrimaryColumn('uuid')
-  cartId: string;
-
-  @ManyToOne(() => Cart, (cart) => cart.cartItems)
-  cart: Cart;
 }

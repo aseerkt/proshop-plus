@@ -64,24 +64,9 @@ export type CartItem = {
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
+  userId: Scalars['ID'];
   qty: Scalars['Int'];
   product: Product;
-};
-
-export type Cart = {
-  __typename?: 'Cart';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  updatedAt: Scalars['DateTime'];
-  userId: Scalars['ID'];
-  cartItems: Array<CartItem>;
-};
-
-export type CartItems = {
-  __typename?: 'CartItems';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  updatedAt: Scalars['DateTime'];
 };
 
 export type OnlyId = {
@@ -161,11 +146,6 @@ export type UserResult = {
   errors?: Maybe<Array<FieldError>>;
 };
 
-export type GuestItem = {
-  productId: Scalars['ID'];
-  qty: Scalars['Int'];
-};
-
 export type RegisterInput = {
   name: Scalars['String'];
   email: Scalars['String'];
@@ -180,7 +160,7 @@ export type ChangePasswordArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  getMyCart?: Maybe<Cart>;
+  getMyCart: Array<CartItem>;
   getProducts: Array<Product>;
   getProduct?: Maybe<Product>;
   me?: Maybe<User>;
@@ -193,15 +173,20 @@ export type QueryGetProductArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addToCart?: Maybe<CartItem>;
   changeItemQty?: Maybe<Scalars['Int']>;
   deleteCartItem: Scalars['Boolean'];
-  addGuestItemsToCart: Array<CartItem>;
-  addToCart?: Maybe<CartItem>;
   register: OkResult;
   login: UserResult;
   logout: Scalars['Boolean'];
   editProfile: UserResult;
   changePassword: OkResult;
+};
+
+
+export type MutationAddToCartArgs = {
+  qty: Scalars['Int'];
+  productId: Scalars['ID'];
 };
 
 
@@ -213,17 +198,6 @@ export type MutationChangeItemQtyArgs = {
 
 export type MutationDeleteCartItemArgs = {
   cartItemId: Scalars['ID'];
-};
-
-
-export type MutationAddGuestItemsToCartArgs = {
-  guestItems: Array<GuestItem>;
-};
-
-
-export type MutationAddToCartArgs = {
-  qty: Scalars['Int'];
-  productId: Scalars['ID'];
 };
 
 
@@ -265,19 +239,6 @@ export type ProductFieldsFragment = (
 export type UserFieldsFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'name' | 'email' | 'isAdmin' | 'createdAt' | 'updatedAt'>
-);
-
-export type AddGuestItemsToCartMutationVariables = Exact<{
-  guestItems: Array<GuestItem> | GuestItem;
-}>;
-
-
-export type AddGuestItemsToCartMutation = (
-  { __typename?: 'Mutation' }
-  & { addGuestItemsToCart: Array<(
-    { __typename?: 'CartItem' }
-    & CartItemFieldsFragment
-  )> }
 );
 
 export type AddToCartMutationVariables = Exact<{
@@ -406,13 +367,9 @@ export type GetMyCartQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetMyCartQuery = (
   { __typename?: 'Query' }
-  & { getMyCart?: Maybe<(
-    { __typename?: 'Cart' }
-    & Pick<Cart, 'id'>
-    & { cartItems: Array<(
-      { __typename?: 'CartItem' }
-      & CartItemFieldsFragment
-    )> }
+  & { getMyCart: Array<(
+    { __typename?: 'CartItem' }
+    & CartItemFieldsFragment
   )> }
 );
 
@@ -486,17 +443,6 @@ export const UserFieldsFragmentDoc = gql`
   updatedAt
 }
     `;
-export const AddGuestItemsToCartDocument = gql`
-    mutation AddGuestItemsToCart($guestItems: [GuestItem!]!) {
-  addGuestItemsToCart(guestItems: $guestItems) {
-    ...CartItemFields
-  }
-}
-    ${CartItemFieldsFragmentDoc}`;
-
-export function useAddGuestItemsToCartMutation() {
-  return Urql.useMutation<AddGuestItemsToCartMutation, AddGuestItemsToCartMutationVariables>(AddGuestItemsToCartDocument);
-};
 export const AddToCartDocument = gql`
     mutation AddToCart($productId: ID!, $qty: Int!) {
   addToCart(productId: $productId, qty: $qty) {
@@ -609,10 +555,7 @@ export function useRegisterMutation() {
 export const GetMyCartDocument = gql`
     query GetMyCart {
   getMyCart {
-    id
-    cartItems {
-      ...CartItemFields
-    }
+    ...CartItemFields
   }
 }
     ${CartItemFieldsFragmentDoc}`;

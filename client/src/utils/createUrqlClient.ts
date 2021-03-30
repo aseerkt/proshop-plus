@@ -71,16 +71,13 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 (result, data) => {
                   const newItem = result.addToCart;
                   if (!newItem) return data;
-                  const cartItems = data.getMyCart.cartItems;
+                  const cartItems = data.getMyCart;
                   const existIndex = cartItems.findIndex(
                     (ci) => ci.id === newItem.id
                   );
                   if (existIndex === -1) {
                     return {
-                      getMyCart: {
-                        ...data.getMyCart,
-                        cartItems: cartItems.concat(result.addToCart),
-                      },
+                      getMyCart: cartItems.concat(result.addToCart),
                     };
                   }
                   cartItems.splice(existIndex, 1, newItem);
@@ -92,10 +89,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               const result = _result as ChangeItemQtyMutation;
               const newQty = result.changeItemQty;
               if (newQty) {
-                const {
-                  qty,
-                  cartItemId,
-                } = args as ChangeItemQtyMutationVariables;
+                const { cartItemId } = args as ChangeItemQtyMutationVariables;
                 cache.writeFragment(
                   gql`
                     fragment newItem on CartItem {

@@ -1,5 +1,0 @@
-mutation AddGuestItemsToCart($guestItems: [GuestItem!]!) {
-  addGuestItemsToCart(guestItems: $guestItems) {
-    ...CartItemFields
-  }
-}

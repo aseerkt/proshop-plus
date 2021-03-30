@@ -17,7 +17,7 @@ import { useGuestCartStore } from '../zustand/useGuestCartStore';
 const CartPage = () => {
   const [{ data: userData, fetching: userLoading }] = useMeQuery();
   const [{ data, fetching }] = useGetMyCartQuery();
-  const cartItems = data?.getMyCart?.cartItems || [];
+  const cartItems = data?.getMyCart || [];
   // const guestCartItems = useGuestCartStore((state) => state.carItems);
   const totalItemsQty = cartItems.reduce((qty, item) => (qty += item.qty), 0);
   const totalPrice = cartItems
