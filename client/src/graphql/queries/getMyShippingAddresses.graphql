@@ -1,0 +1,5 @@
+query GetMyShippingAddresses {
+  getMyShippingAddresses {
+    ...ShippingAddressFields
+  }
+}

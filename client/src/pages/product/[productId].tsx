@@ -15,14 +15,11 @@ import {
 import styles from '../../styles/pages/ProductPage.module.scss';
 import { createUrqlClient } from '../../utils/createUrqlClient';
 import { isServerSide } from '../../utils/isServerSide';
-import { useGuestCartStore } from '../../zustand/useGuestCartStore';
 
 const ProductPage = () => {
-  const [{ data: userData }] = useMeQuery({ pause: isServerSide() });
   const { query } = useRouter();
   const { productId }: any = query;
   const [qty, setQty] = useState(1);
-  const addToGuestCart = useGuestCartStore((state) => state.addToGuestCart);
   const [{ data, fetching }] = useGetProductQuery({
     variables: { productId },
     pause: typeof productId !== 'string',
@@ -48,14 +45,14 @@ const ProductPage = () => {
         <a className='btn btn-filled'>Go back</a>
       </NextLink>
       <div className={styles.productPage__container}>
-        <Image
-          src={product.image}
-          alt={product.name}
-          height='100%'
-          layout='responsive'
-          objectFit='contain'
-          width='100%'
-        />
+        <div style={{ position: 'relative' }}>
+          <Image
+            src={product.image}
+            alt={product.name}
+            layout='fill'
+            objectFit='contain'
+          />
+        </div>
         <div className={styles.productPage__details}>
           <h2>{product.name}</h2>
           <Rating rating={product.rating} />

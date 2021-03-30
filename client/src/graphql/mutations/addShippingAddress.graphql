@@ -1,0 +1,11 @@
+mutation AddShippingAddress($addShippingArgs: AddShippingAddressArgs!) {
+  addShippingAddress(addShippingArgs: $addShippingArgs) {
+    shippingAddress {
+      ...ShippingAddressFields
+    }
+    errors {
+      path
+      message
+    }
+  }
+}

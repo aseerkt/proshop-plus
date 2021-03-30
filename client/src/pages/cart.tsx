@@ -13,6 +13,7 @@ import {
 import styles from '../styles/pages/CartPage.module.scss';
 import { createUrqlClient } from '../utils/createUrqlClient';
 import { useGuestCartStore } from '../zustand/useGuestCartStore';
+import Button from '../components/Button';
 
 const CartPage = () => {
   const [{ data: userData, fetching: userLoading }] = useMeQuery();
@@ -86,9 +87,13 @@ const CartPage = () => {
           <div className={styles.cartPage__stats}>
             <h3 className='uppercase'>Subtotal ({totalItemsQty}) items</h3>
             <p>Net Price: ${totalPrice}</p>
-            <button role='button' className='btn btn-filled btn-block'>
+            <Button
+              disabled={!userData || !userData.me || cartItems.length < 1}
+              role='button'
+              className='btn btn-filled btn-block'
+            >
               Proceed to checkout
-            </button>
+            </Button>
           </div>
         </div>
       </>

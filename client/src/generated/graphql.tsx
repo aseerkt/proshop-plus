@@ -134,6 +134,12 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type AddShippingAdressResult = {
+  __typename?: 'AddShippingAdressResult';
+  shippingAddress?: Maybe<ShippingAddress>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
 export type OkResult = {
   __typename?: 'OkResult';
   ok?: Maybe<Scalars['Boolean']>;
@@ -144,6 +150,13 @@ export type UserResult = {
   __typename?: 'UserResult';
   user?: Maybe<User>;
   errors?: Maybe<Array<FieldError>>;
+};
+
+export type AddShippingAddressArgs = {
+  address: Scalars['String'];
+  city: Scalars['String'];
+  postalCode: Scalars['String'];
+  country: Scalars['String'];
 };
 
 export type RegisterInput = {
@@ -163,6 +176,7 @@ export type Query = {
   getMyCart: Array<CartItem>;
   getProducts: Array<Product>;
   getProduct?: Maybe<Product>;
+  getMyShippingAddresses: Array<ShippingAddress>;
   me?: Maybe<User>;
 };
 
@@ -176,6 +190,7 @@ export type Mutation = {
   addToCart?: Maybe<CartItem>;
   changeItemQty?: Maybe<Scalars['Int']>;
   deleteCartItem: Scalars['Boolean'];
+  addShippingAddress: AddShippingAdressResult;
   register: OkResult;
   login: UserResult;
   logout: Scalars['Boolean'];
@@ -198,6 +213,11 @@ export type MutationChangeItemQtyArgs = {
 
 export type MutationDeleteCartItemArgs = {
   cartItemId: Scalars['ID'];
+};
+
+
+export type MutationAddShippingAddressArgs = {
+  addShippingArgs: AddShippingAddressArgs;
 };
 
 
@@ -236,9 +256,33 @@ export type ProductFieldsFragment = (
   & Pick<Product, 'id' | 'name' | 'image' | 'description' | 'brand' | 'category' | 'price' | 'countInStock' | 'rating' | 'numReviews' | 'createdAt' | 'updatedAt'>
 );
 
+export type ShippingAddressFieldsFragment = (
+  { __typename?: 'ShippingAddress' }
+  & Pick<ShippingAddress, 'address' | 'postalCode' | 'city' | 'country'>
+);
+
 export type UserFieldsFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'name' | 'email' | 'isAdmin' | 'createdAt' | 'updatedAt'>
+);
+
+export type AddShippingAddressMutationVariables = Exact<{
+  addShippingArgs: AddShippingAddressArgs;
+}>;
+
+
+export type AddShippingAddressMutation = (
+  { __typename?: 'Mutation' }
+  & { addShippingAddress: (
+    { __typename?: 'AddShippingAdressResult' }
+    & { shippingAddress?: Maybe<(
+      { __typename?: 'ShippingAddress' }
+      & ShippingAddressFieldsFragment
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'path' | 'message'>
+    )>> }
+  ) }
 );
 
 export type AddToCartMutationVariables = Exact<{
@@ -373,6 +417,17 @@ export type GetMyCartQuery = (
   )> }
 );
 
+export type GetMyShippingAddressesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyShippingAddressesQuery = (
+  { __typename?: 'Query' }
+  & { getMyShippingAddresses: Array<(
+    { __typename?: 'ShippingAddress' }
+    & ShippingAddressFieldsFragment
+  )> }
+);
+
 export type GetProductQueryVariables = Exact<{
   productId: Scalars['ID'];
 }>;
@@ -433,6 +488,14 @@ export const CartItemFieldsFragmentDoc = gql`
   }
 }
     ${ProductFieldsFragmentDoc}`;
+export const ShippingAddressFieldsFragmentDoc = gql`
+    fragment ShippingAddressFields on ShippingAddress {
+  address
+  postalCode
+  city
+  country
+}
+    `;
 export const UserFieldsFragmentDoc = gql`
     fragment UserFields on User {
   id
@@ -443,6 +506,23 @@ export const UserFieldsFragmentDoc = gql`
   updatedAt
 }
     `;
+export const AddShippingAddressDocument = gql`
+    mutation AddShippingAddress($addShippingArgs: AddShippingAddressArgs!) {
+  addShippingAddress(addShippingArgs: $addShippingArgs) {
+    shippingAddress {
+      ...ShippingAddressFields
+    }
+    errors {
+      path
+      message
+    }
+  }
+}
+    ${ShippingAddressFieldsFragmentDoc}`;
+
+export function useAddShippingAddressMutation() {
+  return Urql.useMutation<AddShippingAddressMutation, AddShippingAddressMutationVariables>(AddShippingAddressDocument);
+};
 export const AddToCartDocument = gql`
     mutation AddToCart($productId: ID!, $qty: Int!) {
   addToCart(productId: $productId, qty: $qty) {
@@ -562,6 +642,17 @@ export const GetMyCartDocument = gql`
 
 export function useGetMyCartQuery(options: Omit<Urql.UseQueryArgs<GetMyCartQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetMyCartQuery>({ query: GetMyCartDocument, ...options });
+};
+export const GetMyShippingAddressesDocument = gql`
+    query GetMyShippingAddresses {
+  getMyShippingAddresses {
+    ...ShippingAddressFields
+  }
+}
+    ${ShippingAddressFieldsFragmentDoc}`;
+
+export function useGetMyShippingAddressesQuery(options: Omit<Urql.UseQueryArgs<GetMyShippingAddressesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetMyShippingAddressesQuery>({ query: GetMyShippingAddressesDocument, ...options });
 };
 export const GetProductDocument = gql`
     query GetProduct($productId: ID!) {

@@ -1,0 +1,6 @@
+fragment ShippingAddressFields on ShippingAddress {
+  address
+  postalCode
+  city
+  country
+}
