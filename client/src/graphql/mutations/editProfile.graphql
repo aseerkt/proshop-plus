@@ -1,0 +1,14 @@
+mutation EditProfile($name: String!, $email: String!) {
+  editProfile(name: $name, email: $email) {
+    user {
+      id
+      name
+      email
+      createdAt
+    }
+    errors {
+      path
+      message
+    }
+  }
+}

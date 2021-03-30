@@ -13,6 +13,7 @@ import {
 import { Cart } from '../entities/Cart';
 import { CartItem } from '../entities/CartItem';
 import { isAuth } from '../middlewares/isAuth';
+import { isUser } from '../middlewares/isUser';
 import { MyContext } from '../MyContext';
 
 @Resolver(Cart)
@@ -23,7 +24,7 @@ export class CartResolver {
   }
 
   @Query(() => Cart, { nullable: true })
-  @UseMiddleware(isAuth)
+  @UseMiddleware(isUser)
   getMyCart(@Ctx() { res }: MyContext) {
     return Cart.findOne({ where: { userId: res.locals.userId } });
   }

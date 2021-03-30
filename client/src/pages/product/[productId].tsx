@@ -9,15 +9,20 @@ import Layout from '../../containers/Layout';
 import {
   useGetProductQuery,
   useAddToCartMutation,
+  useMeQuery,
+  Product,
 } from '../../generated/graphql';
 import styles from '../../styles/pages/ProductPage.module.scss';
 import { createUrqlClient } from '../../utils/createUrqlClient';
+import { isServerSide } from '../../utils/isServerSide';
+import { useGuestCartStore } from '../../zustand/useGuestCartStore';
 
 const ProductPage = () => {
+  const [{ data: userData }] = useMeQuery({ pause: isServerSide() });
   const { query } = useRouter();
   const { productId }: any = query;
   const [qty, setQty] = useState(1);
-
+  const addToGuestCart = useGuestCartStore((state) => state.addToGuestCart);
   const [{ data, fetching }] = useGetProductQuery({
     variables: { productId },
     pause: typeof productId !== 'string',
@@ -27,21 +32,22 @@ const ProductPage = () => {
   const product = data && data.getProduct;
 
   const addToCartHandler = async () => {
-    try {
-      const res = await addToCart({ productId, qty });
-      console.log(res);
-    } catch (err) {
-      console.log(err);
+    if (userData && !userData.me) {
+      addToGuestCart(product as Product, qty);
+    } else {
+      try {
+        const res = await addToCart({ productId, qty });
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
   if (fetching) return <h2>Oops</h2>;
   if (!product) return <h2>No product</h2>;
   return (
-    <Layout>
-      <Head>
-        <title>{product.name}</title>
-      </Head>
+    <Layout title={product.name}>
       <NextLink href='/'>
         <a className='btn btn-filled'>Go back</a>
       </NextLink>

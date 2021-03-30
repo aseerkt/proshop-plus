@@ -149,22 +149,33 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
-export type RegisterResult = {
-  __typename?: 'RegisterResult';
+export type OkResult = {
+  __typename?: 'OkResult';
   ok?: Maybe<Scalars['Boolean']>;
   errors?: Maybe<Array<FieldError>>;
 };
 
-export type LoginResult = {
-  __typename?: 'LoginResult';
+export type UserResult = {
+  __typename?: 'UserResult';
   user?: Maybe<User>;
   errors?: Maybe<Array<FieldError>>;
+};
+
+export type GuestItem = {
+  productId: Scalars['ID'];
+  qty: Scalars['Int'];
 };
 
 export type RegisterInput = {
   name: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type ChangePasswordArgs = {
+  oldPassword: Scalars['String'];
+  password: Scalars['String'];
+  confirmPassword: Scalars['String'];
 };
 
 export type Query = {
@@ -184,10 +195,13 @@ export type Mutation = {
   __typename?: 'Mutation';
   changeItemQty?: Maybe<Scalars['Int']>;
   deleteCartItem: Scalars['Boolean'];
+  addGuestItemsToCart: Array<CartItem>;
   addToCart?: Maybe<CartItem>;
-  register: RegisterResult;
-  login: LoginResult;
+  register: OkResult;
+  login: UserResult;
   logout: Scalars['Boolean'];
+  editProfile: UserResult;
+  changePassword: OkResult;
 };
 
 
@@ -199,6 +213,11 @@ export type MutationChangeItemQtyArgs = {
 
 export type MutationDeleteCartItemArgs = {
   cartItemId: Scalars['ID'];
+};
+
+
+export type MutationAddGuestItemsToCartArgs = {
+  guestItems: Array<GuestItem>;
 };
 
 
@@ -218,6 +237,17 @@ export type MutationLoginArgs = {
   email: Scalars['String'];
 };
 
+
+export type MutationEditProfileArgs = {
+  email: Scalars['String'];
+  name: Scalars['String'];
+};
+
+
+export type MutationChangePasswordArgs = {
+  changePasswordInput: ChangePasswordArgs;
+};
+
 export type CartItemFieldsFragment = (
   { __typename?: 'CartItem' }
   & Pick<CartItem, 'id' | 'qty'>
@@ -235,6 +265,19 @@ export type ProductFieldsFragment = (
 export type UserFieldsFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'name' | 'email' | 'isAdmin' | 'createdAt' | 'updatedAt'>
+);
+
+export type AddGuestItemsToCartMutationVariables = Exact<{
+  guestItems: Array<GuestItem> | GuestItem;
+}>;
+
+
+export type AddGuestItemsToCartMutation = (
+  { __typename?: 'Mutation' }
+  & { addGuestItemsToCart: Array<(
+    { __typename?: 'CartItem' }
+    & CartItemFieldsFragment
+  )> }
 );
 
 export type AddToCartMutationVariables = Exact<{
@@ -266,6 +309,23 @@ export type ChangeItemQtyMutation = (
   & Pick<Mutation, 'changeItemQty'>
 );
 
+export type ChangePasswordMutationVariables = Exact<{
+  changePasswordInput: ChangePasswordArgs;
+}>;
+
+
+export type ChangePasswordMutation = (
+  { __typename?: 'Mutation' }
+  & { changePassword: (
+    { __typename?: 'OkResult' }
+    & Pick<OkResult, 'ok'>
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'path' | 'message'>
+    )>> }
+  ) }
+);
+
 export type DeleteCartItemMutationVariables = Exact<{
   cartItemId: Scalars['ID'];
 }>;
@@ -274,6 +334,26 @@ export type DeleteCartItemMutationVariables = Exact<{
 export type DeleteCartItemMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteCartItem'>
+);
+
+export type EditProfileMutationVariables = Exact<{
+  name: Scalars['String'];
+  email: Scalars['String'];
+}>;
+
+
+export type EditProfileMutation = (
+  { __typename?: 'Mutation' }
+  & { editProfile: (
+    { __typename?: 'UserResult' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name' | 'email' | 'createdAt'>
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'path' | 'message'>
+    )>> }
+  ) }
 );
 
 export type LoginMutationVariables = Exact<{
@@ -285,7 +365,7 @@ export type LoginMutationVariables = Exact<{
 export type LoginMutation = (
   { __typename?: 'Mutation' }
   & { login: (
-    { __typename?: 'LoginResult' }
+    { __typename?: 'UserResult' }
     & { user?: Maybe<(
       { __typename?: 'User' }
       & UserFieldsFragment
@@ -312,8 +392,8 @@ export type RegisterMutationVariables = Exact<{
 export type RegisterMutation = (
   { __typename?: 'Mutation' }
   & { register: (
-    { __typename?: 'RegisterResult' }
-    & Pick<RegisterResult, 'ok'>
+    { __typename?: 'OkResult' }
+    & Pick<OkResult, 'ok'>
     & { errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'path' | 'message'>
@@ -406,6 +486,17 @@ export const UserFieldsFragmentDoc = gql`
   updatedAt
 }
     `;
+export const AddGuestItemsToCartDocument = gql`
+    mutation AddGuestItemsToCart($guestItems: [GuestItem!]!) {
+  addGuestItemsToCart(guestItems: $guestItems) {
+    ...CartItemFields
+  }
+}
+    ${CartItemFieldsFragmentDoc}`;
+
+export function useAddGuestItemsToCartMutation() {
+  return Urql.useMutation<AddGuestItemsToCartMutation, AddGuestItemsToCartMutationVariables>(AddGuestItemsToCartDocument);
+};
 export const AddToCartDocument = gql`
     mutation AddToCart($productId: ID!, $qty: Int!) {
   addToCart(productId: $productId, qty: $qty) {
@@ -430,6 +521,21 @@ export const ChangeItemQtyDocument = gql`
 export function useChangeItemQtyMutation() {
   return Urql.useMutation<ChangeItemQtyMutation, ChangeItemQtyMutationVariables>(ChangeItemQtyDocument);
 };
+export const ChangePasswordDocument = gql`
+    mutation ChangePassword($changePasswordInput: ChangePasswordArgs!) {
+  changePassword(changePasswordInput: $changePasswordInput) {
+    ok
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+
+export function useChangePasswordMutation() {
+  return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
+};
 export const DeleteCartItemDocument = gql`
     mutation DeleteCartItem($cartItemId: ID!) {
   deleteCartItem(cartItemId: $cartItemId)
@@ -438,6 +544,26 @@ export const DeleteCartItemDocument = gql`
 
 export function useDeleteCartItemMutation() {
   return Urql.useMutation<DeleteCartItemMutation, DeleteCartItemMutationVariables>(DeleteCartItemDocument);
+};
+export const EditProfileDocument = gql`
+    mutation EditProfile($name: String!, $email: String!) {
+  editProfile(name: $name, email: $email) {
+    user {
+      id
+      name
+      email
+      createdAt
+    }
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+
+export function useEditProfileMutation() {
+  return Urql.useMutation<EditProfileMutation, EditProfileMutationVariables>(EditProfileDocument);
 };
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {

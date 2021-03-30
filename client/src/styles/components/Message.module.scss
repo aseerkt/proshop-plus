@@ -1,0 +1,24 @@
+.message {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 1rem;
+  margin-bottom: 0.4rem;
+  i {
+    cursor: pointer;
+  }
+
+  &__info {
+    color: #1f9bcf;
+    border: 1px solid #1f9bcf;
+  }
+  &__error {
+    color: #d9534f;
+    border: 1px solid #d9534f;
+  }
+  &__success {
+    color: #4bbf73;
+    border: 1px solid #4bbf73;
+  }
+}

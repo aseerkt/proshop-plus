@@ -1,6 +1,7 @@
 import { Formik, Form } from 'formik';
 import { withUrqlClient } from 'next-urql';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import Button from '../components/Button';
 import InputField from '../components/InputField';
 import FormContainer from '../containers/FormContainer';
@@ -8,6 +9,7 @@ import { useRegisterMutation } from '../generated/graphql';
 import { createUrqlClient } from '../utils/createUrqlClient';
 
 const Register = () => {
+  const router = useRouter();
   const [, register] = useRegisterMutation();
 
   return (
@@ -17,10 +19,12 @@ const Register = () => {
         onSubmit={async (values, action) => {
           try {
             const res = await register({ registerInput: values });
-            const { errors } = res.data?.register;
-            errors.forEach(({ path, message }) => {
-              action.setFieldError(path, message);
-            });
+            const { errors, ok } = res.data?.register;
+            if (errors)
+              errors.forEach(({ path, message }) => {
+                action.setFieldError(path, message);
+              });
+            if (ok) router.push('/login');
           } catch (err) {
             console.log(err);
           }

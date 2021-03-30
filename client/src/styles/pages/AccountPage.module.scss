@@ -1,0 +1,25 @@
+.accountPage {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+
+  &__gridItem {
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+      background-color: #eeeaea;
+    }
+    p {
+      font-weight: 500;
+      margin-top: 0;
+    }
+    small {
+      color: #8d8a8a;
+    }
+  }
+}

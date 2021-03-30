@@ -17,13 +17,19 @@ import {
   LogoutMutation,
 } from '../generated/graphql';
 import { betterUpdateQuery } from './betterUpdateQuery';
+import { msgStore } from '../zustand/messageStore';
 
 const errorExchange: Exchange = ({ forward }) => (ops$) => {
   return pipe(
     forward(ops$),
     tap(({ error }) => {
-      if (error?.message.includes('not authenticated')) {
-        Router.replace('/login');
+      if (error?.message.includes('Not Authenticated')) {
+        // Router.replace('/login');
+        console.log(error);
+        console.log('we made it here');
+        const { getState } = msgStore;
+        const { alert } = getState();
+        alert('You need to login to continue', 'info');
       }
     })
   );
@@ -54,7 +60,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               const myCurrentCart = cache.readQuery<GetMyCartQuery>({
                 query: GetMyCartDocument,
               });
-              if (!myCurrentCart.getMyCart) {
+              if (!myCurrentCart || !myCurrentCart?.getMyCart) {
                 cache.invalidate('Query', 'getMyCart');
                 return;
               }
@@ -124,6 +130,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               );
             },
             logout: (_result, _args, cache, _info) => {
+              Router.replace('/');
               betterUpdateQuery<LogoutMutation, MeQuery>(
                 cache,
                 { query: MeDocument },
@@ -131,7 +138,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 () => ({ me: null })
               );
               cache.invalidate('Query', 'getMyCart');
-              Router.replace('/');
             },
           },
         },

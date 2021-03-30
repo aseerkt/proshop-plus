@@ -37,10 +37,10 @@ const Navbar = () => {
                 <NavDropdown title={user.name}>
                   <ul>
                     <li>
-                      <NextLink href='/'>
+                      <NextLink href='/account'>
                         <a>
                           {' '}
-                          <i className='fas fa-user'></i> Profile
+                          <i className='fas fa-user'></i> Account
                         </a>
                       </NextLink>
                     </li>

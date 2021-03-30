@@ -15,7 +15,7 @@ export class RegisterInput {
 }
 
 @ObjectType()
-export class RegisterResult {
+export class OkResult {
   @Field({ nullable: true })
   ok?: boolean;
 
@@ -24,10 +24,20 @@ export class RegisterResult {
 }
 
 @ObjectType()
-export class LoginResult {
+export class UserResult {
   @Field(() => User, { nullable: true })
   user?: User;
 
   @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[];
+}
+
+@InputType()
+export class ChangePasswordArgs {
+  @Field()
+  oldPassword: string;
+  @Field()
+  password: string;
+  @Field()
+  confirmPassword: string;
 }

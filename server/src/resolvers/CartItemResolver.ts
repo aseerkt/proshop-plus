@@ -1,8 +1,10 @@
 import {
   Arg,
   Ctx,
+  Field,
   FieldResolver,
   ID,
+  InputType,
   Int,
   Mutation,
   Resolver,
@@ -14,6 +16,15 @@ import { CartItem } from '../entities/CartItem';
 import { Product } from '../entities/Product';
 import { isAuth } from '../middlewares/isAuth';
 import { MyContext } from '../MyContext';
+
+@InputType()
+class GuestItem {
+  @Field(() => ID)
+  productId: string;
+
+  @Field(() => Int)
+  qty: number;
+}
 
 @Resolver(CartItem)
 export class CartItemResolver {
@@ -58,5 +69,49 @@ export class CartItemResolver {
     if (!cartItem) return false;
     await cartItem.remove();
     return true;
+  }
+
+  @Mutation(() => [CartItem])
+  @UseMiddleware(isAuth)
+  async addGuestItemsToCart(
+    @Arg('guestItems', () => [GuestItem]) guestItems: GuestItem[],
+    @Ctx() { res }: MyContext
+  ): Promise<CartItem[] | null> {
+    const myCart = await Cart.findOne({ where: { userId: res.locals.userId } });
+    if (!myCart) {
+      const newCart = await Cart.create({ userId: res.locals.userId }).save();
+      const newItems = await CartItem.save(
+        guestItems.map(({ productId, qty }) =>
+          CartItem.create({ productId, qty, cartId: newCart.id })
+        )
+      );
+      return newItems;
+    } else {
+      const cartItems = await CartItem.find({
+        where: { cartId: myCart.id },
+      });
+      let newOrUpdatedCartItems: CartItem[] = [];
+      guestItems.forEach(async ({ productId, qty }) => {
+        const existIndex = cartItems.findIndex(
+          (i) => i.productId === productId
+        );
+        if (existIndex === -1) {
+          const newItem = await CartItem.create({
+            cartId: myCart.id,
+            qty,
+            productId,
+          }).save();
+          newOrUpdatedCartItems.push(newItem);
+        } else {
+          const updItem = cartItems[existIndex];
+          if (updItem.qty !== qty) {
+            updItem.qty = qty;
+            await updItem.save();
+            newOrUpdatedCartItems.push(updItem);
+          }
+        }
+      });
+      return newOrUpdatedCartItems;
+    }
   }
 }
